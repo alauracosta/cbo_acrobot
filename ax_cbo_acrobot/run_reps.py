@@ -4,9 +4,9 @@ import pandas as pd
 from multiprocessing import Pool
 
 from paramacrobo import ParamAcroBO
-from run_bo_ax import run_bo_ax_wrapper
-from run_cbo_ax import run_cbo_ax_wrapper
-from utils import handle_working_directory, load_data
+from run_bo import run_bo_wrapper
+from run_cbo import run_cbo_wrapper
+from utils import handle_working_directory, load_data, save_data_reps
 
 
 def run_reps(params):
@@ -22,10 +22,10 @@ def run_reps(params):
     # Parallel execution
     if params.train_context:
         with Pool(processes=os.cpu_count()) as pool:
-            results = pool.map(run_cbo_ax_wrapper, bo_args)
+            results = pool.map(run_cbo_wrapper, bo_args)
     else:
         with Pool(processes=os.cpu_count()) as pool:
-            results = pool.map(run_bo_ax_wrapper, bo_args)
+            results = pool.map(run_bo_wrapper, bo_args)
         
 
     # Collect results
@@ -52,17 +52,7 @@ def run_reps(params):
         "it_bad": it_bad_list
     })
 
-    if params.save_data_all:
-        save_folder = "results"
-        os.makedirs(save_folder, exist_ok=True)
-        if params.train_context:
-            filling_str = "filling" if params.FILLING else f"train{params.train_context}" 
-            base_filename = f"results/acrocbo_r{params.reps}_target{params.target_context}_{filling_str}_s{params.n_seed}it{params.n_iter}"
-        else:
-            base_filename = f"results/acrobo_r{params.reps}_target{params.target_context}_s{params.n_seed}it{params.n_iter}"
-        df_reps.to_csv(f"{base_filename}_REPS.csv", index=False)
-        df_averaged.to_csv(f"{base_filename}_AV.csv", index=False)
-        print("Files saved successfully.")
+    save_data_reps(params, df_reps, df_averaged)
        
     postdata = load_data(params)
 

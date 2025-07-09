@@ -221,12 +221,12 @@ class AcroCBO:
         ax.axvline(self.trial_indices[self.limit], color='black', linestyle='dotted')
         plt.xlabel("Trial Index")
         plt.ylabel("Mean Reward")
-        plt.title(f"BO for {self.target}\nMean: {self.av_reward:.2f}, Dev: {self.dev_reward:.2f}, Best: {self.best_reward:.2f}")
+        plt.title(f"CBO for {self.target_context}\nMean: {self.av_reward:.2f}, Dev: {self.dev_reward:.2f}, Best: {self.best_reward:.2f}")
 
         save_folder = "results"
         os.makedirs(save_folder, exist_ok=True)
         filling_str = "filling" if self.FILLING else f"train{self.train_context}" 
-        fig_filename = f"acrocbo_target{self.target}_{filling_str}_s{self.n_seed}it{self.n_iterations}_PLOT" + ".png"
+        fig_filename = f"acrocbo_target{self.target_context}_{filling_str}_s{self.n_seed}it{self.n_iterations}_PLOT" + ".png"
         fig_save_path = os.path.join(save_folder, fig_filename)
         plt.savefig(fig_save_path)
         print(f"Figure saved as {fig_filename} in {save_folder}")
@@ -240,7 +240,7 @@ class AcroCBO:
         plt.ylabel('Frequency')
         plt.title('Histogram of Mean Values (intervals of 5)')
 
-        fig_filename = f"acrocbo_target{self.target}_{filling_str}_s{self.n_seed}it{self.n_iterations}" + ".png"
+        fig_filename = f"acrocbo_target{self.target_context}_{filling_str}_s{self.n_seed}it{self.n_iterations}" + ".png"
         fig_save_path = os.path.join(save_folder, fig_filename)
         plt.savefig(fig_save_path)
         print(f"Figure saved as {fig_filename} in {save_folder}")

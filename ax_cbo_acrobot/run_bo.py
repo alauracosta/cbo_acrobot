@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 from acrobo import AcroBO
 
-def run_bo_ax(params):
+def run_bo(params):
 
     tuner = AcroBO(params.n_seed, params.n_iter, params.target_context)
     tuner.add_params(["kp", "ki", "kd", "v"], [(-5.0, 5.0), (-5.0, 5.0), (-5.0, 5.0), (0.5, 1.5)])
@@ -29,5 +29,5 @@ def run_bo_ax(params):
 
     return tuner.trial_indices, tuner.rewards, tuner.best_reward, tuner.av_regret, tuner.it_bad
 
-def run_bo_ax_wrapper(args):
-    return run_bo_ax(*args)
+def run_bo_wrapper(args):
+    return run_bo(*args)

@@ -1,4 +1,5 @@
 
+import copy
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,6 +31,46 @@ def handle_working_directory():
             print("Invalid path. Staying in the current directory:", os.getcwd())
     else:
         print("Staying in current directory:", os.getcwd())
+
+def extend_or_default(value, n):
+    if value is None:
+        return [None] * n
+    elif len(value) < n:
+        return value + [None] * (n - len(value))
+    else:
+        return value
+    
+
+def init_benchmark(params):
+    from run_reps import run_reps
+    if params.n_seed < 10 or params.train_context:
+        print('Running Contextual BO') if params.train_context else print('Running Low Sampling BO')
+        params_vanilla = copy.deepcopy(params)
+        params_vanilla.n_seed = params.seed_vanilla 
+        params_vanilla.train_context = False
+        try:
+            data_vanilla = load_data(params_vanilla)
+        except Exception as e:
+            print("Run Vanilla Mehtod to obtain benchmark")
+            params_vanilla.reps = params.runs_vanilla
+            data_vanilla = run_reps(params_vanilla)
+        params.vanilla_best = (max(data_vanilla.av_dic['best']))
+        params.vanilla_lowest = (np.min(data_vanilla.rewards_matrix[data_vanilla.limit:,]))
+
+def save_data_reps(params, df_reps, df_averaged):
+    if params.save_data_all:
+        save_folder = "results"
+        os.makedirs(save_folder, exist_ok=True)
+        if params.train_context:
+            filling_str = "filling" if params.FILLING else f"train{params.train_context}" 
+            base_filename = f"results/acrocbo_r{params.reps}_target{params.target_context}_{filling_str}_s{params.n_seed}it{params.n_iter}"
+        else:
+            base_filename = f"results/acrobo_r{params.reps}_target{params.target_context}_s{params.n_seed}it{params.n_iter}"
+        df_reps.to_csv(f"{base_filename}_REPS.csv", index=False)
+        df_averaged.to_csv(f"{base_filename}_AV.csv", index=False)
+        print("Files saved successfully.")
+
+
         
 def load_data(params):
 
