@@ -21,11 +21,13 @@ def run_cbo(params, tuner=None):
             print("  -> Create the initial dataset - FILLING")
             tuner.create_random_dataset()
         else:
-            print(f"  -> Create the initial dataset - NO FILLING - Train context: {params.target_context}")
-            tuner.create_random_dataset(train_context=params.target_context)
-            tuner.run_optimization_loop(train_context=params.target_context)
+            print(f"  -> Create the initial dataset - NO FILLING - Train context: {params.train_context}")
+            tuner.create_random_dataset(train_context=params.train_context)
+            tuner.run_optimization_loop(train_context=params.train_context)
+    
+    tuner.target_context = params.target_context
 
-    print("  -> Start optimization loop")
+    print(f"  -> Start optimization loop - Target context: {tuner.target_context }")
     tuner.run_optimization_loop()
 
     tuner.get_values(params.save_data_reps)

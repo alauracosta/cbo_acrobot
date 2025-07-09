@@ -240,7 +240,7 @@ class AcroCBO:
         plt.ylabel('Frequency')
         plt.title('Histogram of Mean Values (intervals of 5)')
 
-        fig_filename = f"acrocbo_target{self.target_context}_{filling_str}_s{self.n_seed}it{self.n_iterations}" + ".png"
+        fig_filename = f"acrocbo_target{self.target_context}_{filling_str}_s{self.n_seed}it{self.n_iterations}_HIST" + ".png"
         fig_save_path = os.path.join(save_folder, fig_filename)
         plt.savefig(fig_save_path)
         print(f"Figure saved as {fig_filename} in {save_folder}")
